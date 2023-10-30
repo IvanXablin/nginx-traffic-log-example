@@ -1,6 +1,6 @@
 FROM nginx:1.25.1-alpine
 
-WORKDIR /home/xab
+WORKDIR /home
 
 RUN apk update
 RUN apk --update add g++ git gcc make zlib-dev linux-headers pcre-dev openssl-dev nano
@@ -11,8 +11,6 @@ RUN cd nginx-1.25.1 && git clone https://github.com/Lax/traffic-accounting-nginx
 RUN cd nginx-1.25.1 && ./configure --prefix=/etc/nginx --with-compat --add-dynamic-module=traffic-accounting-nginx-module 
 RUN cd nginx-1.25.1 && make && make install
 RUN cd nginx-1.25.1 && make modules
-
-COPY ../index.html /usr/src/index.html
 
 EXPOSE 80
 

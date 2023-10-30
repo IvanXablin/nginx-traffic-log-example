@@ -1,0 +1,1 @@
+# Тестовый стенд для модуля traffic-accounting-nginx-module
