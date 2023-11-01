@@ -8,8 +8,6 @@ services:
       ports: 
         - "80:80"
       volumes:
-        - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
         - ./nginx/logs:/etc/nginx/logs
       healthcheck:
         test: ["CMD", "nc", "-z", "localhost", "80"]
@@ -21,7 +19,9 @@ services:
         default: 
 
     postgres-db:
-      image: postgres
+      image: postgres:16.0-alpine
+      ports:
+        - 5432:5432
       environment:
         POSTGRES_PASSWORD: example
         PGDATA: /data
@@ -42,7 +42,7 @@ services:
         - 8080:8080
       environment:    
         ADMINER_DEFAULT_SERVER: postgres-db
-      restart: always     
+      restart: always       
 
     myapp: 
       build:
