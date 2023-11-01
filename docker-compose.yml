@@ -20,6 +20,30 @@ services:
       networks:
         default: 
 
+    postgres-db:
+      image: postgres
+      environment:
+        POSTGRES_PASSWORD: example
+        PGDATA: /data
+        POSTGRES_INITDB_ARGS: "--username=postgres"
+      volumes:
+        - ./db/postgresql/data:/data   
+      healthcheck:
+        test: "pg_isready -q -h localhost -p 5432 -U postgres -d postgres || exit 1"
+        interval: 10s
+        timeout: 10s
+        retries: 3
+        start_period: 10s     
+      restart: always        
+
+    adminer:
+      image: adminer
+      ports:
+        - 8080:8080
+      environment:    
+        ADMINER_DEFAULT_SERVER: postgres-db
+      restart: always     
+
     myapp: 
       build:
         context: .
@@ -34,6 +58,19 @@ services:
         start_period: 10s     
       networks:
         default:  
+
+    welcome:
+      image: rancher/cowsay:latest
+      command: "-W 45 \"Test site:http://localhost:3000\nAdminer:http://localhost:8080\""
+      depends_on:
+        webserver:
+          condition: service_healthy
+        adminer:
+          condition: service_started
+        postgres-db:
+          condition: service_healthy
+        myapp:
+          condition: service_healthy        
 
 networks:
   default:
