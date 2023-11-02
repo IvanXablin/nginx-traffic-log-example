@@ -1,17 +1,19 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import sql from "./shared/postgres"
-import parser from "../../parser/parser"
+import parser from "./shared/parser"
+
 
 export const getTraffic = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
   const result = await sql`select *from accounting_id_traffic`
-  const sas = await parser()
-  reply.send(sas)
+  reply.send(result)
 }
 
 export const insertTraffic = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-  const result = await sql`insert into accounting_id_traffic 
-                           (accounting_id, requests, bytes_in, bytes_out, from_time, to_time)
-                           values (${ 1 }, ${ 2 }, ${ 3 }, ${ 4 }, ${ 5 }, ${ 6 })
-                          `
-  reply.send(result)
+  const date = await parser('../nginx/logs/http-accounting.log')
+  date.forEach(async(item) => {
+    await sql`insert into accounting_id_traffic 
+                         (accounting_id, requests, bytes_in, bytes_out, from_time, to_time)
+                         values (${ item.accounting_id }, ${ item.requests }, ${ item.bytes_in },
+                                 ${ item.bytes_out }, ${ new Date(item.from * 1000) }, ${ new Date(item.to * 1000)  })`
+  })
 }

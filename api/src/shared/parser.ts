@@ -1,6 +1,15 @@
 import fs from "fs/promises"
-import { TrafficAccountingID } from "./types"
-import { regexNumber } from "./shared"
+
+export type TrafficAccountingID = {
+  from: number
+  to: number
+  accounting_id: string
+  requests: number
+  bytes_in: number
+  bytes_out: number
+}
+
+export const regexNumber: RegExp = /[^\d]/g
 
 const parser = async (path: string) => {
   const arrayOfTrafficAccountingID: TrafficAccountingID[] = []
