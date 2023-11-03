@@ -59,6 +59,20 @@ services:
       networks:
         default:  
 
+    api: 
+      image: node:18
+      volumes: 
+        - ./api:/usr/src/api
+      working_dir: /usr/src/api
+      command: bash -c "npm i && npm run dev"
+      ports: 
+        - "5000:5000"  
+      depends_on:
+        - webserver
+        - postgres-db   
+      networks:
+        default:      
+
     welcome:
       image: rancher/cowsay:latest
       command: "-W 45 \"Test site:http://localhost:3000\nAdminer:http://localhost:8080\""
@@ -67,10 +81,12 @@ services:
           condition: service_healthy
         adminer:
           condition: service_started
+        myapp:
+          condition: service_healthy     
         postgres-db:
           condition: service_healthy
-        myapp:
-          condition: service_healthy        
+        api:
+          condition: service_started        
 
 networks:
   default:

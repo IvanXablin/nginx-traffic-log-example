@@ -16,7 +16,7 @@ server.route({
 })
 
 const main = async (): Promise<void> => {
-  server.listen({ port: 5000 }, (error: Error | null, address: string) => {
+  server.listen({ host: 'api', port: 5000 }, (error: Error | null, address: string) => {
     if (error) {
       console.error(error)
       process.exit(1)
