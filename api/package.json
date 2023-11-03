@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "fastify": "^4.24.3",
+    "nginx-log-traffic-parser": "^1.0.1",
     "postgres": "^3.4.2"
   }
 }

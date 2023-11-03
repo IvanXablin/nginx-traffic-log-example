@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import sql from "./shared/postgres"
-import parser from "./shared/parser"
-
+import parser from "nginx-log-traffic-parser"
 
 export const getTraffic = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
   const result = await sql`select *from accounting_id_traffic`
