@@ -7,9 +7,9 @@ export const getTraffic = async (request: FastifyRequest, reply: FastifyReply): 
   reply.send(result)
 }
 
-export const insertTraffic = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-  const date = await parser('../nginx/logs/http-accounting.log')
-  
+export const insertTraffic = async (): Promise<void> => {
+  const date = await parser('/usr/src/logs/http-accounting.log')
+    
   date.forEach(async(item) => {
     const id = await sql`select id from accounting_id_traffic
                          where accounting_id = ${item.accounting_id}

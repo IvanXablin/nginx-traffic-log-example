@@ -63,6 +63,7 @@ services:
       image: node:18
       volumes: 
         - ./api:/usr/src/api
+        - ./nginx/logs/http-accounting.log:/usr/src/logs/http-accounting.log
       working_dir: /usr/src/api
       command: bash -c "npm i && npm run dev"
       ports: 

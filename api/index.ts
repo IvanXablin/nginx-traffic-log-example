@@ -1,5 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify'
 import { getTraffic, insertTraffic } from './src/controller'
+import cron from 'node-cron'
 
 const server: FastifyInstance = fastify()
 
@@ -9,13 +10,11 @@ server.route({
   handler: getTraffic
 })
 
-server.route({
-  method: 'POST',
-  url: '/',
-  handler: insertTraffic
-})
-
 const main = async (): Promise<void> => {
+  cron.schedule('* * * * *', () => {
+    insertTraffic()
+  });
+
   server.listen({ host: 'api', port: 5000 }, (error: Error | null, address: string) => {
     if (error) {
       console.error(error)
